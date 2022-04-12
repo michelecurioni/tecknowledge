@@ -1,10 +1,11 @@
-package com.codeusingjava.configuration;
+package com.opentext.sample.rabbit.configuration;
 
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.DirectRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.DirectMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.RabbitListenerContainerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +17,8 @@ public class RabbitMqConfig {
 	
 	@Value("${rabbitmq.queue}")
 	private String qName;
-	
+
+	private String testQName = "testQueue";
 	
 	@Value("${rabbitmq.exchange}")
 	private String exchange;
@@ -26,8 +28,14 @@ public class RabbitMqConfig {
 	private String routingKey;
 
 	@Bean
-	Queue qu() {
+	@Qualifier("deploymentQueue")
+	Queue deploymentQueue() {
 		return new Queue(qName, Boolean.TRUE);
+	}
+
+	@Bean
+	Queue testQueue() {
+		return new Queue(testQName, Boolean.TRUE);
 	}
 
 	@Bean
@@ -36,7 +44,7 @@ public class RabbitMqConfig {
 	}
 
 	@Bean
-	Binding binding(final Queue q, final DirectExchange directExchange) {
+	Binding binding(@Qualifier("deploymentQueue") final Queue q, final DirectExchange directExchange) {
 		return BindingBuilder.bind(q).to(directExchange).with(routingKey);
 	}
 

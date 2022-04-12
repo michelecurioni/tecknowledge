@@ -1,4 +1,4 @@
-package com.codeusingjava.sender.controller;
+package com.opentext.sample.rabbit.sender.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class Sender {
 	public String send(@PathVariable("msg") final String message) {
 		LOGGER.info("Sending message to the queue.");
 		rabbitTemplate.convertAndSend(binding.getExchange(), binding.getRoutingKey(), message);
-		LOGGER.info("Message sent successfully to the queue!!!");
+		LOGGER.info("Message {} sent successfully to the queue!!!", message);
 		return "Great!! your message "+ message + " is sent";
 	}
 }

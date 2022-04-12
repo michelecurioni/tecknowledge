@@ -1,4 +1,4 @@
-package com.codeusingjava.receiver;
+package com.opentext.sample.rabbit.receiver;
 
 import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
@@ -18,9 +18,9 @@ public class Receiver {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Receiver.class);
 
 	@Autowired
-	Queue qu;
+	Queue deploymentQueue;
 
-	@RabbitListener(queues = "#{qu.getName()}", ackMode = "MANUAL",
+	@RabbitListener(queues = "#{deploymentQueue.getName()}", ackMode = "MANUAL",
 			containerFactory = "prefetchTenRabbitListenerContainerFactory",
 			concurrency = "5")	// Dynamically reading the queue name using SpEL from the "queue" object.
 	public void getMsg(final String message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag)

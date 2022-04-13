@@ -22,8 +22,10 @@ public class RabbitMqConfig {
 	
 	@Value("${rabbitmq.exchange}")
 	private String exchange;
-	
-	
+
+	@Value("${rabbitmq.deploy.prefetch.count}")
+	private int prefetchCount;
+
 	@Value("${rabbitmq.routingkey}")
 	private String routingKey;
 
@@ -48,11 +50,13 @@ public class RabbitMqConfig {
 		return BindingBuilder.bind(q).to(directExchange).with(routingKey);
 	}
 
-	@Bean
-	public RabbitListenerContainerFactory<DirectMessageListenerContainer> prefetchTenRabbitListenerContainerFactory(ConnectionFactory rabbitConnectionFactory) {
-		DirectRabbitListenerContainerFactory factory = new DirectRabbitListenerContainerFactory();
-		factory.setConnectionFactory(rabbitConnectionFactory);
-		factory.setPrefetchCount(10);
-		return factory;
-	}
+//	@Bean
+//	public RabbitListenerContainerFactory<DirectMessageListenerContainer> prefetchTenRabbitListenerContainerFactory(ConnectionFactory rabbitConnectionFactory) {
+//		DirectRabbitListenerContainerFactory factory = new DirectRabbitListenerContainerFactory();
+//		factory.setConnectionFactory(rabbitConnectionFactory);
+//
+//		factory.setPrefetchCount(prefetchCount);
+//		factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+//		return factory;
+//	}
 }

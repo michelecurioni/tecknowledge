@@ -20,14 +20,14 @@ public class Receiver {
 	@Autowired
 	Queue deploymentQueue;
 
-	@RabbitListener(queues = "#{deploymentQueue.getName()}", ackMode = "MANUAL",
-			containerFactory = "prefetchTenRabbitListenerContainerFactory",
-			concurrency = "5")	// Dynamically reading the queue name using SpEL from the "queue" object.
+	@RabbitListener(queues = "#{deploymentQueue.getName()}", ackMode = "AUTO",
+			//containerFactory = "prefetchTenRabbitListenerContainerFactory",
+			concurrency = "${rabbitmq.deploy.concurrency}")	// Dynamically reading the queue name using SpEL from the "queue" object.
 	public void getMsg(final String message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag)
 			throws IOException {
 		LOGGER.info("Getting messages.....");
 		LOGGER.info("Finally Receiver received the message and the message  is..\n" + message);
 
-		channel.basicAck(tag, false);
+		//channel.basicAck(tag, false);
 	}
 }

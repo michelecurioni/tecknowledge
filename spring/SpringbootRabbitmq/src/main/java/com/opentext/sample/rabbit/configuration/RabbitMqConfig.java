@@ -1,5 +1,7 @@
 package com.opentext.sample.rabbit.configuration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.DirectRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -13,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 // Marker annotation that tells spring to generate bean definitions at runtime for the methods annotated with @Bean annotation.
 @Configuration
 public class RabbitMqConfig {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMqConfig.class);
 	
 	@Value("${rabbitmq.queue}")
 	private String qName;
@@ -47,6 +49,7 @@ public class RabbitMqConfig {
 
 	@Bean
 	Binding binding(@Qualifier("deploymentQueue") final Queue q, final DirectExchange directExchange) {
+		LOGGER.info("Listening on queue {}", q.getName());
 		return BindingBuilder.bind(q).to(directExchange).with(routingKey);
 	}
 
